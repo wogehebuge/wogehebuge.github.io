@@ -1320,7 +1320,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #eb2be3;
+  background: #ff79c8;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2705,4 +2705,11 @@ mjx-container + br {
 }
 .back-to-top.back-to-top-on {
   margin-top: 16px;
+}
+.fa-bilibili {
+  background: url("/images/bilibili.svg");
+  background-position: 50% 75%;
+  background-repeat: no-repeat;
+  height: 1rem;
+  width: 1rem;
 }
