@@ -227,36 +227,29 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="uava开发部结构笔试题考核"><a href="#uava开发部结构笔试题考核" class="headerlink" title="uava开发部结构笔试题考核"></a>uava开发部结构笔试题考核</h1><span id="more"></span>
-
-<h2 id="简答题"><a href="#简答题" class="headerlink" title="简答题"></a>简答题</h2><p>1.<strong>请简述应力的概念，单位是什么？有哪两种应力分类？然后并列举常见的应力状态</strong>   </p>
+        <h1>uava开发部结构笔试题考核</h1>
+<span id="more"></span>
+<h2 id="简答题">简答题</h2>
+<p>1.<strong>请简述应力的概念，单位是什么？有哪两种应力分类？然后并列举常见的应力状态</strong></p>
 <!--答：应力就是指单位面积的受力大小，单位为Pa(力/面积)，主要是正应力（$\sigma$）和切应力（$\tau$),常见应力状态是拉伸，压缩，弯曲，扭转，剪切。-->
-
 <p>2.<strong>请简述应变的概念，有哪两种类型的应变？他们的定义分别是什么？</strong></p>
 <!--答:应变就是材料在应力状态下发生的微观变形，拉伸与压缩应变定义为变形量与原长之比（$\epsilon$）剪切应变定义为材料偏斜角（$\gamma$）-->
-
 <p>3.<strong>应力与应变存在线性关系，而两对形式的应力和应变的关系称为什么？</strong></p>
 <!--答：称为模量，分别是弹性模量（$\sigma=E \epsilon$）与剪切模量（$\tau=G \gamma$）-->
-
 <p>4.<strong>强度与刚度的概念分别是什么？</strong></p>
 <!--答：强度就是材料抵抗塑性形变的能力，刚度就是材料抵抗弹性形变的能力。-->
-
 <p>5.<strong>同样材料同样长度同样横截面积的两根传动轴，一根是实心圆柱，一根是圆管，请问两者的抗扭性能更优？为什么？</strong></p>
 <!--答：圆管抗扭性能更好，因为圆管的材料分布更远离轴心，他的极惯性矩更大，所以抗扭性能更好。-->
-
 <p>6.<strong>如何缓解正方形镂空四角应力集中的现象？</strong></p>
 <!--答：可以通过倒圆角，或者挖孔的方式规避尖锐转折。-->
-
 <p>7.<strong>固定翼飞机机翼产生升力的原理是什么？</strong></p>
 <!--答：根据伯努利原理，气体流速快的地方气压小，而机翼普遍是上凸下凹，下翼面气体流速慢，上翼面气体流速快，产生气压差托举飞机在空中飞行。-->
-
 <p>8.<strong>四旋翼无人机是如何实现转弯的操作的？</strong></p>
 <!--答：1,3旋翼逆时针转动，2，4旋翼顺时针转动，当需要进行逆时针旋转时，逆时针的旋翼转速下降，由于反扭矩的影响导致机身进行逆时针旋转，反之。-->
-
 <p>9.<strong>翼梢小翼的减阻原理是什么？</strong></p>
 <!--答：阻碍下翼面气流流向上翼面，减少诱导阻力。-->
-
-<h2 id="计算题"><a href="#计算题" class="headerlink" title="计算题"></a>计算题</h2><p>1.<strong>6061铝合金T6状态的屈服强度是276MPa，而6061铝的密度是$\rho&#x3D;2.7g&#x2F;cm^3$，一根4040A型材米重是w&#x3D;1.03 kg，我们取安全因数是n&#x3D;1.5，让我们求解最大的轴向拉力。</strong></p>
+<h2 id="计算题">计算题</h2>
+<p>1.<strong>6061铝合金T6状态的屈服强度是276MPa，而6061铝的密度是$\rho=2.7g/cm^3$，一根4040A型材米重是w=1.03 kg，我们取安全因数是n=1.5，让我们求解最大的轴向拉力。</strong></p>
 <!--
 解：安全因素是1.5，那么许用应力就是 
 $$[\sigma]=\frac{\sigma_s}{n}=\frac{276}{1.5}=184MPa$$
@@ -264,18 +257,17 @@ $$[\sigma]=\frac{\sigma_s}{n}=\frac{276}{1.5}=184MPa$$
 $$A=\frac{w}{\rho}=\frac{10.3g/cm}{2.7g/cm^3}\approx 3.8cm^2$$
 则可以计算出最大轴向拉力是
 $$F=[\sigma] A=184MPa \cdot 380mm^2\approx 69920N$$ -->
-
-<p>2.<strong>还是一根6061铝的4040型材，长度是L&#x3D;1m，他的弹性模量E&#x3D;70GPa，截面积是$A&#x3D;380mm^2$,受到拉力是F&#x3D;26600N,那么这根铝型材的变形量是多少？</strong></p>
+<p>2.<strong>还是一根6061铝的4040型材，长度是L=1m，他的弹性模量E=70GPa，截面积是$A=380mm^2$,受到拉力是F=26600N,那么这根铝型材的变形量是多少？</strong></p>
 <!--
 解：根据公式:
 $$\sigma=\frac{F}{A}=E \epsilon->\epsilon=\frac{\Delta L}{L}->\Delta L=\frac{FL}{EA}$$
 将数值代入得；
 $$\Delta L=\frac{26600N\cdot1m}{70Gpa\cdot 380mm^2}=0.001m=1mm$$ -->
-
-<h2 id="画图题"><a href="#画图题" class="headerlink" title="画图题"></a>画图题</h2><p>1.发挥你的想象，设计一台飞行器（多旋翼或者固定翼或者火箭），画出大体结构，并介绍他的功能和应用场景（航拍，测绘，竞速，多功能等等）</p>
+<h2 id="画图题">画图题</h2>
+<p>1.发挥你的想象，设计一台飞行器（多旋翼或者固定翼或者火箭），画出大体结构，并介绍他的功能和应用场景（航拍，测绘，竞速，多功能等等）</p>
 <!--答：没答案-->
-
-<h2 id="补充给大二的同学做的题"><a href="#补充给大二的同学做的题" class="headerlink" title="补充给大二的同学做的题"></a>补充给大二的同学做的题</h2><p>1.<strong>查阅资料，请推导圆柱的极惯性矩的公式。</strong></p>
+<h2 id="补充给大二的同学做的题">补充给大二的同学做的题</h2>
+<p>1.<strong>查阅资料，请推导圆柱的极惯性矩的公式。</strong></p>
 <!--
 ## 极惯性矩
 以下是对于扭矩知识的总结  
@@ -325,8 +317,6 @@ $$I_p=\frac{\pi(R^4-r^4)}{2}=\frac{\pi (D^4-d^4)}{32}$$
 $$W_t=\frac{\pi R^3}{2}=\frac{\pi D^3}{16}$$
 $$W_t=\frac{\pi(R^4-r^4)}{2R}=\frac{\pi (D^4-d^4)}{16D}$$
 -->
-
-
 
     </div>
 
@@ -441,7 +431,7 @@ $$W_t=\frac{\pi(R^4-r^4)}{2R}=\frac{\pi (D^4-d^4)}{16D}$$
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#uava%E5%BC%80%E5%8F%91%E9%83%A8%E7%BB%93%E6%9E%84%E7%AC%94%E8%AF%95%E9%A2%98%E8%80%83%E6%A0%B8"><span class="nav-number">1.</span> <span class="nav-text">uava开发部结构笔试题考核</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E7%AD%94%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text">简答题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E9%A2%98"><span class="nav-number">1.2.</span> <span class="nav-text">计算题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%BB%E5%9B%BE%E9%A2%98"><span class="nav-number">1.3.</span> <span class="nav-text">画图题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%A5%E5%85%85%E7%BB%99%E5%A4%A7%E4%BA%8C%E7%9A%84%E5%90%8C%E5%AD%A6%E5%81%9A%E7%9A%84%E9%A2%98"><span class="nav-number">1.4.</span> <span class="nav-text">补充给大二的同学做的题</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">uava开发部结构笔试题考核</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E7%AD%94%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text">简答题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E9%A2%98"><span class="nav-number">1.2.</span> <span class="nav-text">计算题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%BB%E5%9B%BE%E9%A2%98"><span class="nav-number">1.3.</span> <span class="nav-text">画图题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A1%A5%E5%85%85%E7%BB%99%E5%A4%A7%E4%BA%8C%E7%9A%84%E5%90%8C%E5%AD%A6%E5%81%9A%E7%9A%84%E9%A2%98"><span class="nav-number">1.4.</span> <span class="nav-text">补充给大二的同学做的题</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
