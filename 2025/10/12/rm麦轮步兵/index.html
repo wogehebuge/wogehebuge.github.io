@@ -33,8 +33,13 @@
 <meta property="og:image" content="http://example.com/images/%E9%BA%A6%E8%BD%AE%E6%AD%A5%E5%85%B5%E5%AE%9E%E7%89%A9.jpg">
 <meta property="og:image" content="http://example.com/images/%E9%BA%A6%E8%BD%AE%E6%AD%A5%E5%85%B5%E5%AE%9E%E7%89%A92.jpg">
 <meta property="og:image" content="http://example.com/images/%E9%BA%A6%E8%BD%AE%E6%AD%A5%E5%85%B5%E5%AE%9E%E7%89%A93.jpg">
+<meta property="og:image" content="http://example.com/images/%E6%AD%A5%E5%85%B5/%E4%BE%A7%E9%9D%A2%E6%9C%AA%E8%A3%85%E9%87%8D%E8%A1%A5%E5%9B%BE.png">
+<meta property="og:image" content="http://example.com/images/%E6%AD%A5%E5%85%B5/%E4%BE%A7%E9%9D%A2%E6%9C%AA%E8%A3%85%E9%87%8D%E8%A1%A5%E5%9B%BE2.png">
+<meta property="og:image" content="http://example.com/images/%E6%AD%A5%E5%85%B5/%E5%B9%BF%E5%B7%A5%E9%87%8D%E5%8A%9B%E8%A1%A5%E5%81%BF.png">
+<meta property="og:image" content="http://example.com/images/%E6%AD%A5%E5%85%B5/%E9%87%8D%E5%8A%9B%E8%A1%A5%E5%81%BF%E7%BB%93%E6%9E%84%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
+<meta property="og:image" content="http://example.com/images/%E6%AD%A5%E5%85%B5/%E5%8A%9B%E5%88%86%E8%A7%A3%E5%9B%BE.jpg">
 <meta property="article:published_time" content="2025-10-12T11:41:58.000Z">
-<meta property="article:modified_time" content="2025-10-18T07:12:53.883Z">
+<meta property="article:modified_time" content="2025-10-19T09:02:59.530Z">
 <meta property="article:author" content="Junqin Hong">
 <meta property="article:tag" content="Mechanical Design，model aircraft">
 <meta name="twitter:card" content="summary">
@@ -197,7 +202,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-10-18 15:12:53" itemprop="dateModified" datetime="2025-10-18T15:12:53+08:00">2025-10-18</time>
+                <time title="修改时间：2025-10-19 17:02:59" itemprop="dateModified" datetime="2025-10-19T17:02:59+08:00">2025-10-19</time>
               </span>
 
           
@@ -248,6 +253,21 @@
 <p><img src="/images/%E9%BA%A6%E8%BD%AE%E6%AD%A5%E5%85%B5%E5%AE%9E%E7%89%A9.jpg" alt="麦轮步兵"></p>
 <p><img src="/images/%E9%BA%A6%E8%BD%AE%E6%AD%A5%E5%85%B5%E5%AE%9E%E7%89%A92.jpg" alt="麦轮步兵2"></p>
 <p><img src="/images/%E9%BA%A6%E8%BD%AE%E6%AD%A5%E5%85%B5%E5%AE%9E%E7%89%A93.jpg" alt="麦轮步兵3"></p>
+<h2 id="项目中遭遇的问题及解决方法"><a href="#项目中遭遇的问题及解决方法" class="headerlink" title="项目中遭遇的问题及解决方法"></a>项目中遭遇的问题及解决方法</h2><h3 id="重力补偿"><a href="#重力补偿" class="headerlink" title="重力补偿"></a>重力补偿</h3><h4 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h4><p>云台部分采用连杆驱动，而由于24赛季取消补弹机制，弹仓修改为中供式，pitch轴失去配重，在常规的失能状态下需要电机输出力矩才能保证其水平，这会导致电机持续输出而发热，减少电机的使用寿命，增加故障风险，所以需要设计额外的机械重力补偿结构来实现配平。</p>
+<h4 id="基本要求"><a href="#基本要求" class="headerlink" title="基本要求"></a>基本要求</h4><p>在已经完成的设计中，由于需要保证弹仓的容量充足，背部的空间基本被弹仓填满，需要在狭小空间中设计一个重力补偿结构，且由于其对抗性的工况，需要保证其耐用性。</p>
+<p><img src="/images/%E6%AD%A5%E5%85%B5/%E4%BE%A7%E9%9D%A2%E6%9C%AA%E8%A3%85%E9%87%8D%E8%A1%A5%E5%9B%BE.png" alt="侧面图"></p>
+<p><img src="/images/%E6%AD%A5%E5%85%B5/%E4%BE%A7%E9%9D%A2%E6%9C%AA%E8%A3%85%E9%87%8D%E8%A1%A5%E5%9B%BE2.png" alt="侧面图"></p>
+<h4 id="常见成熟方案举例"><a href="#常见成熟方案举例" class="headerlink" title="常见成熟方案举例"></a>常见成熟方案举例</h4><center style="font-size:14px;color:#11111;font-style:italic">
+广东工业大学开源重力补偿结构</center>
+
+<p><img src="/images/%E6%AD%A5%E5%85%B5/%E5%B9%BF%E5%B7%A5%E9%87%8D%E5%8A%9B%E8%A1%A5%E5%81%BF.png" alt="侧面图"><br>该方案的优势在于其严谨的数学推导，可以实现完美补偿，但是缺点也比较明确，需要安装的空间大，且在强对抗的工况下需要对其进行额外的保护。<br>所以并不适用于我们自己的机器人场景。</p>
+<h4 id="思考与寻找解决方案"><a href="#思考与寻找解决方案" class="headerlink" title="思考与寻找解决方案"></a>思考与寻找解决方案</h4><p>结合我们自己的场景，我们对于pitch轴的需求就是减轻电机的负担，减少电控的调试难度，我们需要做的就是对pitch轴前端的重力力矩做一个抵消结构，而这个抵消的结构可以通过简单的传动结构改变其运行方向，再通过蓄能装置比如简单的弹簧就可以解决，于是，我们创新性地提出了新的重力补充方案，如下图所示：</p>
+<p><img src="/images/%E6%AD%A5%E5%85%B5/%E9%87%8D%E5%8A%9B%E8%A1%A5%E5%81%BF%E7%BB%93%E6%9E%84%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="侧面图"></p>
+<p>由图可知，我通过齿轮与连杆的传动，将抵抗低头的力矩传递到竖直方向，由弹簧反馈，从而实现了我的目标。<br>最上方的小齿轮固连云台，抵抗低头力矩传递到下方的半齿轮上，而半齿轮的旋转抵抗力由连杆传递到弹簧上，再通过一个小滑块限制弹簧的拉伸方向。通过简单的力的分解就可以求出弹簧所需的弹性系数大小，完成选型。</p>
+<p>具体的力计算如下：   </p>
+<p><img src="/images/%E6%AD%A5%E5%85%B5/%E5%8A%9B%E5%88%86%E8%A7%A3%E5%9B%BE.jpg" alt="力分解"></p>
+<p>由力矩守恒可知；$F_0 L0&#x3D;F_1 R_1&#x3D;F_2 R_2&#x3D;F_3 L_1$这里的$F_3$就是$L_1$的垂直分量；再计算其大小，通过力的分解可以得到<br>$$F_3&#x3D;F_弹 \cdot sin\theta \cdot sin\varphi+ F_弹 \cdot cos\theta \cdot cos\varphi$$<br>化简并合并两式子就能得到:<br>$$ F_0 \cdot cos\beta \cdot L_0&#x3D;F_弹 \cdot cos(\theta-\varphi) $$<br>这里$\beta$指的是pitch的角度。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>最终该方案成功投入使用，运行稳定，效果良好，在失能状态下依旧保持云台水平，且不易被外部损坏，占用空间小，容易维护，当云台增加更多负载时，只需要更换弹簧的长短或者k值就能实现配平。</p>
 
     </div>
 
@@ -365,7 +385,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RoboMaster%E6%AD%A5%E5%85%B5%E6%9C%BA%E5%99%A8%E4%BA%BA"><span class="nav-number">1.</span> <span class="nav-text">RoboMaster步兵机器人</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D%EF%BC%9A"><span class="nav-number">1.1.</span> <span class="nav-text">项目介绍：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E5%86%85%E5%AE%B9%EF%BC%9A"><span class="nav-number">1.2.</span> <span class="nav-text">工作内容：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%89%E5%8F%8A%E6%8A%80%E6%9C%AF%E5%86%85%E5%AE%B9%EF%BC%9A"><span class="nav-number">1.3.</span> <span class="nav-text">涉及技术内容：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%BE%97%E5%A5%96%E9%A1%B9%EF%BC%9A"><span class="nav-number">1.4.</span> <span class="nav-text">获得奖项：</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#RoboMaster%E6%AD%A5%E5%85%B5%E6%9C%BA%E5%99%A8%E4%BA%BA"><span class="nav-number">1.</span> <span class="nav-text">RoboMaster步兵机器人</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E4%BB%8B%E7%BB%8D%EF%BC%9A"><span class="nav-number">1.1.</span> <span class="nav-text">项目介绍：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E4%BD%9C%E5%86%85%E5%AE%B9%EF%BC%9A"><span class="nav-number">1.2.</span> <span class="nav-text">工作内容：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%89%E5%8F%8A%E6%8A%80%E6%9C%AF%E5%86%85%E5%AE%B9%EF%BC%9A"><span class="nav-number">1.3.</span> <span class="nav-text">涉及技术内容：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%BE%97%E5%A5%96%E9%A1%B9%EF%BC%9A"><span class="nav-number">1.4.</span> <span class="nav-text">获得奖项：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E4%B8%AD%E9%81%AD%E9%81%87%E7%9A%84%E9%97%AE%E9%A2%98%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">1.5.</span> <span class="nav-text">项目中遭遇的问题及解决方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E5%8A%9B%E8%A1%A5%E5%81%BF"><span class="nav-number">1.5.1.</span> <span class="nav-text">重力补偿</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%BA%E6%99%AF"><span class="nav-number">1.5.1.1.</span> <span class="nav-text">场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E8%A6%81%E6%B1%82"><span class="nav-number">1.5.1.2.</span> <span class="nav-text">基本要求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E6%88%90%E7%86%9F%E6%96%B9%E6%A1%88%E4%B8%BE%E4%BE%8B"><span class="nav-number">1.5.1.3.</span> <span class="nav-text">常见成熟方案举例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%9D%E8%80%83%E4%B8%8E%E5%AF%BB%E6%89%BE%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">1.5.1.4.</span> <span class="nav-text">思考与寻找解决方案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.5.1.5.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -381,7 +401,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
