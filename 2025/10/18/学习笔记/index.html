@@ -32,7 +32,7 @@
 <meta property="og:image" content="http://example.com/images/study/%E6%89%AD%E7%9F%A9%E7%9A%84%E5%AE%8F%E8%A7%82%E5%9B%BE.jpg">
 <meta property="og:image" content="http://example.com/images/study/%E5%88%87%E9%9D%A2%E5%9B%BE.jpg">
 <meta property="article:published_time" content="2025-10-18T14:15:17.000Z">
-<meta property="article:modified_time" content="2025-10-22T21:41:22.184Z">
+<meta property="article:modified_time" content="2025-10-22T22:01:29.090Z">
 <meta property="article:author" content="Junqin Hong">
 <meta property="article:tag" content="Mechanical Design，model aircraft">
 <meta name="twitter:card" content="summary">
@@ -195,7 +195,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-10-23 05:41:22" itemprop="dateModified" datetime="2025-10-23T05:41:22+08:00">2025-10-23</time>
+                <time title="修改时间：2025-10-23 06:01:29" itemprop="dateModified" datetime="2025-10-23T06:01:29+08:00">2025-10-23</time>
               </span>
 
           
@@ -344,7 +344,12 @@ $$u(t)=K_P e(t)+K_i\int_0^te(\tau)d\tau+K_d\frac{de(t)}{dt} $$<br>
 <h2 id="工程架构">工程架构</h2>
 <p>简单粗暴地把所有函数写到main里面,主要是为了学习,就不在意这么多了,其他的hal库函数由stm32cubeMX生成.</p>
 <h2 id="运行流程">运行流程</h2>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">graph TB</span><br><span class="line">A(开始)--&gt;B[初始化定时器,串口pid]--&gt;C[串口1开启dma接收]</span><br><span class="line"></span><br><span class="line">C--&gt;D[进入while循环]--&gt;E[读取当前速度]--&gt;F[对读取的速度进行一阶低通滤波]</span><br><span class="line">F--&gt;G[将滤波后的速度值与实时更新目标值导入pid运算中]--&gt;H[设置pid输出pwm]--&gt;I[延迟20ms]--&gt;D</span><br><span class="line">a[串口1接收来自蓝牙的dma数据]--&gt;b[触发dma中断更新目标值]--&gt;G</span><br></pre></td></tr></table></figure>
+<pre class="mermaid">    graph TB
+    A(开始)-->B[初始化定时器,串口pid]-->C[串口1开启dma接收]
+
+    C-->D[进入while循环]-->E[读取当前速度]-->F[对读取的速度进行一阶低通滤波]
+    F-->G[将滤波后的速度值与实时更新目标值导入pid运算中]-->H[设置pid输出pwm]-->I[延迟20ms]-->D
+    a[串口1接收来自蓝牙的dma数据]-->b[触发dma中断更新目标值]-->G</pre>
 
     </div>
 
