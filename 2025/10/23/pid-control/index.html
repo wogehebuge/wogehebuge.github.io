@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/haha.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/sun.svg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/sun.svg">
+  <link rel="mask-icon" href="/images/sun.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+  <meta name="description" content="使用stm32实现pid算法 pid算法简介 pid是经典的控制算法,通过反馈来调整速度,本文主要实现的是使用stm32实现带ab相编码器的电机的闭环控制. pid的原理其实比较简单,本质是一个反馈控制器,把 目标值与测量值的误差作为输入,通过三项 (p,i,d) 计算控制量,驱动被控对象,使误差减小.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pid_control">
+<meta property="og:url" content="http://example.com/2025/10/23/pid-control/index.html">
+<meta property="og:site_name" content="我个禾布个">
+<meta property="og:description" content="使用stm32实现pid算法 pid算法简介 pid是经典的控制算法,通过反馈来调整速度,本文主要实现的是使用stm32实现带ab相编码器的电机的闭环控制. pid的原理其实比较简单,本质是一个反馈控制器,把 目标值与测量值的误差作为输入,通过三项 (p,i,d) 计算控制量,驱动被控对象,使误差减小.">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/pid/%E6%BB%A4%E6%B3%A2.png">
+<meta property="og:image" content="http://example.com/images/pid/%E6%8E%A7%E5%88%B6%E6%95%88%E6%9E%9C.png">
+<meta property="og:image" content="http://example.com/images/pid/%E7%A1%AC%E4%BB%B6%E5%9B%BE.jpg">
+<meta property="article:published_time" content="2025-10-23T13:14:27.000Z">
+<meta property="article:modified_time" content="2025-10-23T20:30:01.795Z">
+<meta property="article:author" content="Junqin Hong">
+<meta property="article:tag" content="Mechanical Design，model aircraft">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/pid/%E6%BB%A4%E6%B3%A2.png">
+
+<link rel="canonical" href="http://example.com/2025/10/23/pid-control/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>pid_control | 我个禾布个</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta custom-logo">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">我个禾布个</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">A person who loves mechanical design and embedded development.</p>
+      <a>
+        <img class="custom-logo-image" src="/images/sun.svg" alt="我个禾布个">
+      </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-简历">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>简历</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/wogehebuge" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/10/23/pid-control/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/hjq_logo.jpg">
+      <meta itemprop="name" content="Junqin Hong">
+      <meta itemprop="description" content="Mechanical Design，model aircraft">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="我个禾布个">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          pid_control
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-10-23 21:14:27" itemprop="dateCreated datePublished" datetime="2025-10-23T21:14:27+08:00">2025-10-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-10-24 04:30:01" itemprop="dateModified" datetime="2025-10-24T04:30:01+08:00">2025-10-24</time>
+              </span>
+
+          
+            <span id="/2025/10/23/pid-control/" class="post-meta-item leancloud_visitors" data-flag-title="pid_control" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2025/10/23/pid-control/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2025/10/23/pid-control/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1>使用stm32实现pid算法</h1>
+<h2 id="pid算法简介">pid算法简介</h2>
+<p>pid是经典的控制算法,通过反馈来调整速度,本文主要实现的是使用stm32实现带ab相编码器的电机的闭环控制.<br>
+pid的原理其实比较简单,本质是一个反馈控制器,把 <strong>目标值</strong>与<strong>测量值</strong>的误差作为输入,通过三项 <strong>(p,i,d)</strong> 计算控制量,驱动被控对象,使误差减小.</p>
+<span id="more"></span>
+<table>
+<thead>
+<tr>
+<th>P</th>
+<th>比例</th>
+<th>按照误差线性输出,决定响应的快慢</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>I</td>
+<td>积分</td>
+<td>对误差进行时间上的积分,消除稳态误差</td>
+</tr>
+<tr>
+<td>D</td>
+<td>微分</td>
+<td>对误差的变化率做响应,抑制超调和震荡,像是阻尼</td>
+</tr>
+</tbody>
+</table>
+<p>控制量的形式是:<br>
+$$u(t)=K_P e(t)+K_i\int_0^te(\tau)d\tau+K_d\frac{de(t)}{dt} $$<br>
+其中 $e(t)=目标值-测量值$.</p>
+<h2 id="每一项的作用与直觉">每一项的作用与直觉</h2>
+<ol>
+<li>比例P</li>
+</ol>
+<ul>
+<li>作用:立刻根据误差输出控制量</li>
+<li>越大,响应就越快,但是太大会震荡超调</li>
+<li>缺点,存在稳态误差,单纯靠p是无法达到目标值的,只会震荡或者是一直达不到,也就是说比如一直是某个目标某个输出,他只会得到一个输出值,而这个值只是目标与实际误差的线性对应关系.</li>
+</ul>
+<ol start="2">
+<li>积分I</li>
+</ol>
+<ul>
+<li>作用:把长期的小误差累加,消除稳态误差.</li>
+<li>积分越大-&gt;稳态误差越小,通常就是稳态误差一直存在,那么就累计产生效果,实现补充.</li>
+</ul>
+<ol start="3">
+<li>微分D</li>
+</ol>
+<ul>
+<li>作用:预测误差的变化趋势,可以对快速变化的数据产生抑制,比如超调导致的震荡,通过微分来实现抑制,减少超调,相当于是阻尼的角色.</li>
+<li>对噪声很敏感,微分会放大高频噪声,需要对微分项进行滤波</li>
+</ul>
+<h2 id="工程架构">工程架构</h2>
+<p>简单粗暴地把所有函数写到main里面,主要是为了学习,就不在意这么多了,其他的hal库函数由stm32cubeMX生成.</p>
+<h2 id="运行流程">运行流程</h2>
+<pre class="mermaid">    graph TB
+    A(开始)-->B[初始化定时器,串口,pid]-->C[串口1开启dma接收]
+
+    C-->D[进入while循环]-->E[读取当前速度]-->F[对读取的速度进行一阶低通滤波]
+    F-->G[将滤波后的速度值与实时更新目标值导入pid运算中]-->H[设置pid输出pwm]-->I[延迟20ms]-->D
+    a[串口1接收来自蓝牙的dma数据]-->b[触发dma中断更新目标值]-->G</pre>
+<h2 id="函数介绍">函数介绍</h2>
+<center> PID结构体,存储用于pid计算的各参量 </center>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">typedef struct&#123;</span><br><span class="line">  float Kp;</span><br><span class="line">  float Ki;</span><br><span class="line">  float Kd;</span><br><span class="line"></span><br><span class="line">  float setpoint;//目标值</span><br><span class="line">  float feedback;//测量值</span><br><span class="line">  float error;//误差</span><br><span class="line">  float output;//pwm输出</span><br><span class="line">  float last_error;//上一次误差,用于设置微分</span><br><span class="line">  float intergral;//累计误差</span><br><span class="line"></span><br><span class="line">  float output_max;</span><br><span class="line">  float output_min;</span><br><span class="line"></span><br><span class="line">&#125;PID_t;</span><br></pre></td></tr></table></figure>
+<center>各种全局变量</center>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">static int16_t last_count=0;</span><br><span class="line">static float control=0;//pid控制输入占空比,范围是-999~999</span><br><span class="line">static int16_t speed=0;//未经过滤波速度</span><br><span class="line">static int16_t diff=0;//差值</span><br><span class="line">static float speed_IIR=0;//滤波后的速度输出</span><br><span class="line">uint8_t receivedate[7];</span><br><span class="line">char ACK[]=&quot;hello world!\r\n&quot;;</span><br><span class="line">PID_t pid;</span><br></pre></td></tr></table></figure>
+<center>读取编码器的值</center>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">---------------------------</span><br><span class="line">读取编码器的差值函数</span><br><span class="line">---------------------------</span><br><span class="line">*/</span><br><span class="line">int16_t Read_Encoder(void)//TIM2编码器测速函数</span><br><span class="line">&#123;</span><br><span class="line">  </span><br><span class="line">  int16_t count=__HAL_TIM_GET_COUNTER(&amp;htim2);//直接读取寄存器的值</span><br><span class="line">  diff=count-last_count;//前后两次差值</span><br><span class="line">  if(diff&gt;32767)&#123;//逆时针转动，超越最低限额，比如10-&gt;65530，相减等于65520，那就减去65535，得到-15，表示逆时针转动了15</span><br><span class="line">    diff-=65535;</span><br><span class="line">  &#125;</span><br><span class="line">  else if(diff&lt;-32767)&#123;//同理可得，这是顺时针</span><br><span class="line">    diff+=65535;</span><br><span class="line">  &#125;</span><br><span class="line">  last_count=count;//更新上一次编码器值</span><br><span class="line">  return diff;//返回差值</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<center>pid初始化函数</center>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">---------------------------</span><br><span class="line">pid初始化函数</span><br><span class="line">---------------------------</span><br><span class="line">*/</span><br><span class="line">void PID_Init(PID_t *pid,float kp,float ki,float kd)&#123;</span><br><span class="line">  pid-&gt;Kp=kp;</span><br><span class="line">  pid-&gt;Ki=ki;</span><br><span class="line">  pid-&gt;Kd=kd;</span><br><span class="line">  pid-&gt;intergral=0;</span><br><span class="line">  pid-&gt;last_error=0;</span><br><span class="line">  pid-&gt;output=0;</span><br><span class="line">  pid-&gt;feedback=0;</span><br><span class="line">  pid-&gt;output_max=999;</span><br><span class="line">  pid-&gt;output_min=-999;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<center>计算pid的输出函数</center>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">---------------------------</span><br><span class="line">计算pid输出函数</span><br><span class="line">---------------------------</span><br><span class="line">*/</span><br><span class="line">float PID_Compute(PID_t *pid,float measured)&#123;</span><br><span class="line">  float error=pid-&gt;setpoint-measured;//更新误差</span><br><span class="line">  pid-&gt;intergral+=error;//更新累计误差</span><br><span class="line">  float derivative=error-pid-&gt;last_error;//更新微分项</span><br><span class="line">  pid-&gt;last_error=error;//更新上一次误差</span><br><span class="line"></span><br><span class="line">  pid-&gt;output=pid-&gt;Kp*error+pid-&gt;Ki*pid-&gt;intergral+pid-&gt;Kd*derivative;//pid算法</span><br><span class="line">    // if(pid-&gt;setpoint==0)&#123;</span><br><span class="line">    //    pid-&gt;output=0;</span><br><span class="line">    // &#125;</span><br><span class="line">  return pid-&gt;output;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<center>pwm输出函数</center>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">---------------------------</span><br><span class="line">pwm输出函数</span><br><span class="line">---------------------------</span><br><span class="line">*/</span><br><span class="line">void setmotorpwm(float duty)&#123;</span><br><span class="line"></span><br><span class="line">  if(duty &gt; 999) duty = 999;//设定阈值</span><br><span class="line">    if(duty &lt; -999) duty = -999;</span><br><span class="line"></span><br><span class="line">    if(duty &gt;= 0) &#123;//判断正反转</span><br><span class="line">        // 正转</span><br><span class="line">        __HAL_TIM_SET_COMPARE(&amp;htim1, TIM_CHANNEL_1, duty);</span><br><span class="line">        HAL_GPIO_WritePin(AIN1_GPIO_Port, AIN1_Pin, GPIO_PIN_SET);</span><br><span class="line">        HAL_GPIO_WritePin(AIN2_GPIO_Port, AIN2_Pin, GPIO_PIN_RESET);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        // 反转</span><br><span class="line">        __HAL_TIM_SET_COMPARE(&amp;htim1, TIM_CHANNEL_1, -duty);</span><br><span class="line">        HAL_GPIO_WritePin(AIN1_GPIO_Port, AIN1_Pin, GPIO_PIN_RESET);</span><br><span class="line">        HAL_GPIO_WritePin(AIN2_GPIO_Port, AIN2_Pin, GPIO_PIN_SET);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<center>一阶低通滤波器</center>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">---------------------------</span><br><span class="line">对 diff 做一阶低通滤波</span><br><span class="line">y[n] = alpha * y[n-1] + (1 - alpha) * x[n]</span><br><span class="line">alpha 越大越平滑，响应越慢</span><br><span class="line">---------------------------</span><br><span class="line">*/</span><br><span class="line">float DiffFilter_IIR(int32_t diff)</span><br><span class="line">&#123;</span><br><span class="line">    static float filtered = 0.0f;//静态变量上一次输出值</span><br><span class="line">    const float alpha = 0.8f;   // 建议 0.6~0.9，越大越平滑</span><br><span class="line">    </span><br><span class="line">    filtered = alpha * filtered + (1.0f - alpha) * (float)diff;//低通滤波离散型公式</span><br><span class="line">    return filtered;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<center>求解校验和</center>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">---------------------------</span><br><span class="line">求解校验和公式</span><br><span class="line">---------------------------</span><br><span class="line">*/</span><br><span class="line">uint8_t calculate_checksum(const uint8_t* data,uint8_t length)&#123;//校验和函数</span><br><span class="line">    uint8_t sum=0;</span><br><span class="line">    for(uint8_t i=0;i&lt;length;i++)&#123;</span><br><span class="line">        sum+=data[i];</span><br><span class="line">    &#125;</span><br><span class="line">    return sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<center>dma串口接收中断回调</center>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">---------------------------</span><br><span class="line">串口1 dma接收中断回调函数</span><br><span class="line">通讯协议:帧头0xA5;数据4字节 float型;和校验位 数据的和做校验;帧尾 0x5A</span><br><span class="line">---------------------------</span><br><span class="line">*/</span><br><span class="line">void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)&#123;</span><br><span class="line">     if(receivedate[0]==0xA5&amp;&amp;receivedate[6]==0x5A)&#123;</span><br><span class="line">             if(receivedate[5]== calculate_checksum(&amp;receivedate[1],4)) &#123;//将数据位进行和校验</span><br><span class="line">                memcpy(&amp;pid.setpoint, &amp;receivedate[1], 4);//把数据压入pid-&gt;setpoint中</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">    HAL_UART_Transmit_DMA(huart,receivedate,sizeof(receivedate));//测试有没有问题</span><br><span class="line">          </span><br><span class="line">    HAL_UART_Receive_DMA(huart, receivedate, sizeof(receivedate));//重新开启dma接收</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<center>主循环</center>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">while (1)</span><br><span class="line">  &#123;</span><br><span class="line">    // __HAL_TIM_SET_COMPARE(&amp;htim1, TIM_CHANNEL_1, 500);</span><br><span class="line">    //     HAL_GPIO_WritePin(AIN1_GPIO_Port, AIN1_Pin, GPIO_PIN_SET);</span><br><span class="line">    //     HAL_GPIO_WritePin(AIN2_GPIO_Port, AIN2_Pin, GPIO_PIN_RESET);</span><br><span class="line">      speed = Read_Encoder() * (60.0 / (700 * 0.01));//计算速度大小</span><br><span class="line">      //speed = getspeed();  // 从编码器计算得到</span><br><span class="line">     speed_IIR = DiffFilter_IIR(speed);//滤波</span><br><span class="line">      control = PID_Compute(&amp;pid, speed_IIR);//将滤波后的速度导入pid运算中</span><br><span class="line">      //setspeed_direct(pid.setpoint);</span><br><span class="line"></span><br><span class="line">      setmotorpwm(control);//pid输出</span><br><span class="line">  </span><br><span class="line">     HAL_Delay(20); // 20ms采样周期</span><br><span class="line">    /* USER CODE END WHILE */</span><br><span class="line"></span><br><span class="line">    /* USER CODE BEGIN 3 */</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="滤波原理">滤波原理</h2>
+<p>连续域里一阶低通滤波的标准微分方程是:<br>
+$$\tau \frac{dy(t)}{dt}+y(t)=x(t)$$<br>
+其中:</p>
+<ul>
+<li>x(t):输入信号</li>
+<li>y(t):输出信号</li>
+<li>$\tau$:时间常数,越大滤波越圆滑</li>
+</ul>
+<p>然后就需要将该公式离散化运用到mcu运算中<br>
+$$\tau \frac{y[n]-y[n-1]}{\Delta t}+y[n]=x[t]$$<br>
+移项为:<br>
+$$y[t]=\frac{\tau}{\tau+\Delta T} y[t-1]+\frac{\Delta t}{\tau+\Delta t}x[t]$$<br>
+设 $\alpha=\frac{\tau}{\tau+\Delta t}$则可以化简为:<br>
+$$y[t]=\alpha y[t-1]+(1-\alpha)x[t]$$<br>
+这样$\alpha$越大,滤波效果更强,但是响应响应也越慢<br>
+下面看看滤波效果:<br>
+<img src="/images/pid/%E6%BB%A4%E6%B3%A2.png" alt="滤波图"><br>
+绿色是直接读取编码器的速度差值,由于编码器的精度一般,导致出现噪声,且很剧烈,所以就需要进行滤波,获得更精确的速度值(红色).</p>
+<h2 id="实验现象">实验现象</h2>
+<p><img src="/images/pid/%E6%8E%A7%E5%88%B6%E6%95%88%E6%9E%9C.png" alt="实验现象"><br>
+在monitor里面有较好的跟随响应.</p>
+<h2 id="总结">总结</h2>
+<p><img src="/images/pid/%E7%A1%AC%E4%BB%B6%E5%9B%BE.jpg" alt="硬件图"></p>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div class="reward-container">
+  <div>Donate comment here.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/m.jpg" alt="Junqin Hong 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://space.bilibili.com/699838939?spm_id_from=333.1007.0.0">
+            <span class="icon">
+              <i class="fab fa-bilibili"></i>
+            </span>
+
+            <span class="label">Bilibili</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/10/19/uava%E7%BB%93%E6%9E%84%E7%AC%94%E8%AF%95%E9%A2%98%E8%80%83%E6%A0%B8/" rel="prev" title="uava结构笔试题考核">
+      <i class="fa fa-chevron-left"></i> uava结构笔试题考核
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">使用stm32实现pid算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#pid%E7%AE%97%E6%B3%95%E7%AE%80%E4%BB%8B"><span class="nav-number">1.1.</span> <span class="nav-text">pid算法简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AF%8F%E4%B8%80%E9%A1%B9%E7%9A%84%E4%BD%9C%E7%94%A8%E4%B8%8E%E7%9B%B4%E8%A7%89"><span class="nav-number">1.2.</span> <span class="nav-text">每一项的作用与直觉</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E7%A8%8B%E6%9E%B6%E6%9E%84"><span class="nav-number">1.3.</span> <span class="nav-text">工程架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="nav-number">1.4.</span> <span class="nav-text">运行流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.5.</span> <span class="nav-text">函数介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BB%A4%E6%B3%A2%E5%8E%9F%E7%90%86"><span class="nav-number">1.6.</span> <span class="nav-text">滤波原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%8E%B0%E8%B1%A1"><span class="nav-number">1.7.</span> <span class="nav-text">实验现象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.8.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junqin Hong"
+      src="/images/hjq_logo.jpg">
+  <p class="site-author-name" itemprop="name">Junqin Hong</p>
+  <div class="site-description" itemprop="description">Mechanical Design，model aircraft</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="sidebar-button motion-element"><i class="fa fa-comment"></i>
+    Chat
+  </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wogehebuge" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wogehebuge" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1638658956@qq.com" title="E-Mail → mailto:1638658956@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Junqin Hong</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'forest',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : true,
+      appId      : 'uAMebVSVNdpxlDdonlkqW8vh-MdYXbMMI',
+      appKey     : 't0nTl8O1lwFlocMGZGMXC101',
+      placeholder: "请多留言，这对我真的很重要。",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : 'https://uamebvsv.api.lncldglobal.com'
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>

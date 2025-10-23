@@ -32,7 +32,7 @@
 <meta property="og:image" content="http://example.com/images/study/%E6%89%AD%E7%9F%A9%E7%9A%84%E5%AE%8F%E8%A7%82%E5%9B%BE.jpg">
 <meta property="og:image" content="http://example.com/images/study/%E5%88%87%E9%9D%A2%E5%9B%BE.jpg">
 <meta property="article:published_time" content="2025-10-18T14:15:17.000Z">
-<meta property="article:modified_time" content="2025-10-22T22:01:29.090Z">
+<meta property="article:modified_time" content="2025-10-23T13:15:18.831Z">
 <meta property="article:author" content="Junqin Hong">
 <meta property="article:tag" content="Mechanical Design，model aircraft">
 <meta name="twitter:card" content="summary">
@@ -195,7 +195,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-10-23 06:01:29" itemprop="dateModified" datetime="2025-10-23T06:01:29+08:00">2025-10-23</time>
+                <time title="修改时间：2025-10-23 21:15:18" itemprop="dateModified" datetime="2025-10-23T21:15:18+08:00">2025-10-23</time>
               </span>
 
           
@@ -290,66 +290,6 @@ $$W_t=\frac{\pi(R^4 - r^4)}{2R}=\frac{\pi (D^4 - d^4)}{16D}$$</p>
 <p>刚学会怎么用latex，写起笔记来感觉和写论文一样感觉老牛逼了，有意思。<br>
 这个视频讲得很好，可以看看：</p>
 <iframe src="//player.bilibili.com/player.html?isOutside=true&aid=955529147&bvid=BV12W4y1Z7Lp&cid=1187564878&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
-<h1>使用stm32实现pid算法</h1>
-<h2 id="pid算法简介">pid算法简介</h2>
-<p>pid是经典的控制算法,通过反馈来调整速度,本文主要实现的是使用stm32实现带ab相编码器的电机的闭环控制.<br>
-pid的原理其实比较简单,本质是一个反馈控制器,把 <strong>目标值</strong>与<strong>测量值</strong>的误差作为输入,通过三项 <strong>(p,i,d)</strong> 计算控制量,驱动被控对象,使误差减小.</p>
-<table>
-<thead>
-<tr>
-<th>P</th>
-<th>比例</th>
-<th>按照误差线性输出,决定响应的快慢</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>I</td>
-<td>积分</td>
-<td>对误差进行时间上的积分,消除稳态误差</td>
-</tr>
-<tr>
-<td>D</td>
-<td>微分</td>
-<td>对误差的变化率做响应,抑制超调和震荡,像是阻尼</td>
-</tr>
-</tbody>
-</table>
-<p>控制量的形式是:<br>
-$$u(t)=K_P e(t)+K_i\int_0^te(\tau)d\tau+K_d\frac{de(t)}{dt} $$<br>
-其中 $e(t)=目标值-测量值$.</p>
-<h2 id="每一项的作用与直觉">每一项的作用与直觉</h2>
-<ol>
-<li>比例P</li>
-</ol>
-<ul>
-<li>作用:立刻根据误差输出控制量</li>
-<li>越大,响应就越快,但是太大会震荡超调</li>
-<li>缺点,存在稳态误差,单纯靠p是无法达到目标值的,只会震荡或者是一直达不到,也就是说比如一直是某个目标某个输出,他只会得到一个输出值,而这个值只是目标与实际误差的线性对应关系.</li>
-</ul>
-<ol start="2">
-<li>积分I</li>
-</ol>
-<ul>
-<li>作用:把长期的小误差累加,消除稳态误差.</li>
-<li>积分越大-&gt;稳态误差越小,通常就是稳态误差一直存在,那么就累计产生效果,实现补充.</li>
-</ul>
-<ol start="3">
-<li>微分D</li>
-</ol>
-<ul>
-<li>作用:预测误差的变化趋势,可以对快速变化的数据产生抑制,比如超调导致的震荡,通过微分来实现抑制,减少超调,相当于是阻尼的角色.</li>
-<li>对噪声很敏感,微分会放大高频噪声,需要对微分项进行滤波</li>
-</ul>
-<h2 id="工程架构">工程架构</h2>
-<p>简单粗暴地把所有函数写到main里面,主要是为了学习,就不在意这么多了,其他的hal库函数由stm32cubeMX生成.</p>
-<h2 id="运行流程">运行流程</h2>
-<pre class="mermaid">    graph TB
-    A(开始)-->B[初始化定时器,串口pid]-->C[串口1开启dma接收]
-
-    C-->D[进入while循环]-->E[读取当前速度]-->F[对读取的速度进行一阶低通滤波]
-    F-->G[将滤波后的速度值与实时更新目标值导入pid运算中]-->H[设置pid输出pwm]-->I[延迟20ms]-->D
-    a[串口1接收来自蓝牙的dma数据]-->b[触发dma中断更新目标值]-->G</pre>
 
     </div>
 
@@ -467,7 +407,7 @@ $$u(t)=K_P e(t)+K_i\int_0^te(\tau)d\tau+K_d\frac{de(t)}{dt} $$<br>
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">扭矩</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%81%E6%83%AF%E6%80%A7%E7%9F%A9"><span class="nav-number">1.1.</span> <span class="nav-text">极惯性矩</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E6%9E%81%E6%83%AF%E6%80%A7%E7%9F%A9%E7%9A%84%E8%AE%A1%E7%AE%97%E5%85%AC%E5%BC%8F%E5%8F%8A%E6%8E%A8%E5%AF%BC"><span class="nav-number">1.2.</span> <span class="nav-text">常见极惯性矩的计算公式及推导</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">使用stm32实现pid算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#pid%E7%AE%97%E6%B3%95%E7%AE%80%E4%BB%8B"><span class="nav-number">2.1.</span> <span class="nav-text">pid算法简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AF%8F%E4%B8%80%E9%A1%B9%E7%9A%84%E4%BD%9C%E7%94%A8%E4%B8%8E%E7%9B%B4%E8%A7%89"><span class="nav-number">2.2.</span> <span class="nav-text">每一项的作用与直觉</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E7%A8%8B%E6%9E%B6%E6%9E%84"><span class="nav-number">2.3.</span> <span class="nav-text">工程架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="nav-number">2.4.</span> <span class="nav-text">运行流程</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">扭矩</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%81%E6%83%AF%E6%80%A7%E7%9F%A9"><span class="nav-number">1.1.</span> <span class="nav-text">极惯性矩</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E6%9E%81%E6%83%AF%E6%80%A7%E7%9F%A9%E7%9A%84%E8%AE%A1%E7%AE%97%E5%85%AC%E5%BC%8F%E5%8F%8A%E6%8E%A8%E5%AF%BC"><span class="nav-number">1.2.</span> <span class="nav-text">常见极惯性矩的计算公式及推导</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.3.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -483,7 +423,7 @@ $$u(t)=K_P e(t)+K_i\int_0^te(\tau)d\tau+K_d\frac{de(t)}{dt} $$<br>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
