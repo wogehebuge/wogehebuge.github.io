@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/haha.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/sun.svg">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/sun.svg">
+  <link rel="mask-icon" href="/images/sun.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+  <meta name="description" content="平衡小车课程设计 简介 使用stm32单片机设计并制作两轮平衡小车实现直立任务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="平衡小车">
+<meta property="og:url" content="http://example.com/2026/01/05/%E5%B9%B3%E8%A1%A1%E5%B0%8F%E8%BD%A6/index.html">
+<meta property="og:site_name" content="我个禾布个">
+<meta property="og:description" content="平衡小车课程设计 简介 使用stm32单片机设计并制作两轮平衡小车实现直立任务">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/%E5%B0%8F%E8%BD%A6/%E5%85%A8%E6%99%AF%E5%9B%BE.jpg">
+<meta property="og:image" content="http://example.com/images/%E5%B0%8F%E8%BD%A6/%E7%A1%AC%E4%BB%B6%E5%9B%BE.png">
+<meta property="og:image" content="http://example.com/images/%E5%B0%8F%E8%BD%A6/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2%E6%95%88%E6%9E%9C.png">
+<meta property="og:image" content="http://example.com/images/%E5%B0%8F%E8%BD%A6/%E7%BC%96%E7%A0%81%E5%99%A8%E6%A8%A1%E5%9E%8B.png">
+<meta property="og:image" content="http://example.com/images/%E5%B0%8F%E8%BD%A6/cubemx%E5%9B%BE.png">
+<meta property="og:image" content="http://example.com/images/%E5%B0%8F%E8%BD%A6/n20.avif">
+<meta property="article:published_time" content="2026-01-04T21:26:58.000Z">
+<meta property="article:modified_time" content="2026-01-05T02:02:17.088Z">
+<meta property="article:author" content="Junqin Hong">
+<meta property="article:tag" content="Mechanical Design，model aircraft">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/%E5%B0%8F%E8%BD%A6/%E5%85%A8%E6%99%AF%E5%9B%BE.jpg">
+
+<link rel="canonical" href="http://example.com/2026/01/05/%E5%B9%B3%E8%A1%A1%E5%B0%8F%E8%BD%A6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>平衡小车 | 我个禾布个</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta custom-logo">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">我个禾布个</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">A person who loves mechanical design and embedded development.</p>
+      <a>
+        <img class="custom-logo-image" src="/images/sun.svg" alt="我个禾布个">
+      </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-面试讲解">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>面试讲解</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-简历">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>简历</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/wogehebuge" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2026/01/05/%E5%B9%B3%E8%A1%A1%E5%B0%8F%E8%BD%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/hjq_logo.jpg">
+      <meta itemprop="name" content="Junqin Hong">
+      <meta itemprop="description" content="Mechanical Design，model aircraft">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="我个禾布个">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          平衡小车
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2026-01-05 05:26:58 / 修改时间：10:02:17" itemprop="dateCreated datePublished" datetime="2026-01-05T05:26:58+08:00">2026-01-05</time>
+            </span>
+
+          
+            <span id="/2026/01/05/%E5%B9%B3%E8%A1%A1%E5%B0%8F%E8%BD%A6/" class="post-meta-item leancloud_visitors" data-flag-title="平衡小车" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2026/01/05/%E5%B9%B3%E8%A1%A1%E5%B0%8F%E8%BD%A6/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2026/01/05/%E5%B9%B3%E8%A1%A1%E5%B0%8F%E8%BD%A6/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1>平衡小车课程设计</h1>
+<h2 id="简介">简介</h2>
+<p>使用stm32单片机设计并制作两轮平衡小车实现直立任务</p>
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+<p><model-viewer src="/models/整机.glb" 
+              alt="3D模型" 
+              auto-rotate 
+              camera-controls 
+              style="width: 100%; height: 500px;"><br>
+</model-viewer></p>
+<span id="more"></span>
+<p><img src="/images/%E5%B0%8F%E8%BD%A6/%E5%85%A8%E6%99%AF%E5%9B%BE.jpg" alt="n20"></p>
+<h2 id="关键词">关键词</h2>
+<p>stm32f103c8t6,pid,滤波,电机驱动控制,传感器数据解析</p>
+<h2 id="硬件设计">硬件设计</h2>
+<p><img src="/images/%E5%B0%8F%E8%BD%A6/%E7%A1%AC%E4%BB%B6%E5%9B%BE.png" alt="硬件图"></p>
+<div align="center">
+<pre class="mermaid">graph LR
+A(主控stm32f103c8t6)
+B(电机驱动)
+C(mpu6050)
+D(4s电池)
+E(降压模块)
+F(左电机)
+G(右电机)
+A-->B
+A-->C
+A-->E
+B-->F
+B-->G
+E-->D</pre>
+</div> 
+<h2 id="程序运行">程序运行</h2>
+<div align="center">
+<pre class="mermaid">    graph TB
+    A(开始)-->B[初始化定时器,pid,i2c,mpu6050,卡尔曼滤波器等]-->D
+
+    D[进入while循环]-->E[读取当前的mpu6050的原始值]-->F[通过卡尔曼滤波器将角度与角加速度解算出稳定的绝对角度]
+    F-->G[将当前角度与电机转速加入串级pid运算中,实现直立环与速度环双层闭环]-->H[设置pid输出pwm]-->D
+    a[TIM4设置为更新中断.每隔20ms更新一次事件,读取编码器值]-->b[根据编码器的当前值计算出电机速度]-->G</pre>
+</div>
+<h2 id="功能函数介绍">功能函数介绍</h2>
+<h3 id="1-卡尔曼滤波">1.卡尔曼滤波</h3>
+<p>卡尔曼滤波是一种最优估计算法,通过多传感器数据融合来实现对真实数据的最优估计,他会动态调整数据来源置信度,从而融合多种传感器的数据达到最佳.<br>
+比如对于mpu6050,有两个数据来源分别是绝对角度,也就是三轴陀螺仪和三轴加速度计.<br>
+这其中:<br>
+<strong>陀螺仪</strong>可以准确地反映当前角速度,可以通过积分计算出角度,但是容易出现累计误差,导致偏移,也就是说他是瞬态响应准确.<br>
+<strong>加速度计</strong>可以通过力的分解得出当前的稳态角度,响应慢,容易受到振动干扰,但是数据准确.<br>
+通过对两个数据来源进行数据融合就可以得到最优的角度数据,滤波的效果如下:<br>
+<img src="/images/%E5%B0%8F%E8%BD%A6/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2%E6%95%88%E6%9E%9C.png" alt="硬件图"><br>
+其中绿色是由加速度计直接得出的角度值,红色是经过卡尔曼之后的角度值,由此可得他对抗振动的性能提高了且角度也很准确.<br>
+关于卡尔曼的原理非常复杂,有感兴趣的朋友可以搜索b站up主<br>
+<strong>DR_CAN</strong>的视频讲解:<br>
+下面是我工程的实现函数:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;kalman.h&quot;</span><br><span class="line"></span><br><span class="line">void Kalman_Init(Kalman_t *k)</span><br><span class="line">&#123;</span><br><span class="line">    k-&gt;angle = 0;</span><br><span class="line">    k-&gt;bias = 0;</span><br><span class="line"></span><br><span class="line">    k-&gt;P[0][0] = 0;</span><br><span class="line">    k-&gt;P[0][1] = 0;</span><br><span class="line">    k-&gt;P[1][0] = 0;</span><br><span class="line">    k-&gt;P[1][1] = 0;</span><br><span class="line"></span><br><span class="line">    // 经验值，可以根据实际调整</span><br><span class="line">    k-&gt;Q_angle = 0.002f;   // 越小越信任加速度的角度</span><br><span class="line">    k-&gt;Q_bias  = 0.003f;   // 越小越信任陀螺仪的偏置稳定</span><br><span class="line">    k-&gt;R_measure = 0.03f;  // 加速度计测量噪声</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">float Kalman_Update(Kalman_t *k, float accAngle, float gyroRate, float dt)</span><br><span class="line">&#123;</span><br><span class="line">    /* ============= 1. 预测步骤 ============= */</span><br><span class="line"></span><br><span class="line">    float rate = gyroRate - k-&gt;bias; // 角速度扣除偏置</span><br><span class="line">    k-&gt;angle += rate * dt;           // 预测新的角度</span><br><span class="line"></span><br><span class="line">    // 更新协方差矩阵 P</span><br><span class="line">    k-&gt;P[0][0] += dt * (dt*k-&gt;P[1][1] - k-&gt;P[0][1] - k-&gt;P[1][0] + k-&gt;Q_angle);</span><br><span class="line">    k-&gt;P[0][1] -= dt * k-&gt;P[1][1];</span><br><span class="line">    k-&gt;P[1][0] -= dt * k-&gt;P[1][1];</span><br><span class="line">    k-&gt;P[1][1] += k-&gt;Q_bias * dt;</span><br><span class="line"></span><br><span class="line">    /* ============= 2. 更新步骤 ============= */</span><br><span class="line"></span><br><span class="line">    float S = k-&gt;P[0][0] + k-&gt;R_measure; // 创新协方差</span><br><span class="line">    float K0 = k-&gt;P[0][0] / S;           // 卡尔曼增益 K 的第一项</span><br><span class="line">    float K1 = k-&gt;P[1][0] / S;           // 卡尔曼增益 K 的第二项</span><br><span class="line"></span><br><span class="line">    float y = accAngle - k-&gt;angle;  // 创新（测量 - 预测）</span><br><span class="line"></span><br><span class="line">    k-&gt;angle += K0 * y;             // 更新最终角度</span><br><span class="line">    k-&gt;bias  += K1 * y;             // 更新偏置</span><br><span class="line"></span><br><span class="line">    // 更新协方差矩阵</span><br><span class="line">    float P00_temp = k-&gt;P[0][0];</span><br><span class="line">    float P01_temp = k-&gt;P[0][1];</span><br><span class="line"></span><br><span class="line">    k-&gt;P[0][0] -= K0 * P00_temp;</span><br><span class="line">    k-&gt;P[0][1] -= K0 * P01_temp;</span><br><span class="line">    k-&gt;P[1][0] -= K1 * P00_temp;</span><br><span class="line">    k-&gt;P[1][1] -= K1 * P01_temp;</span><br><span class="line"></span><br><span class="line">    return k-&gt;angle;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="2-电机速度获取">2.电机速度获取</h3>
+<p>我使用的电机是n20电机,带AB相增量式磁性编码器,通过定时器的编码器模式来实现计数.<br>
+<img src="/images/%E5%B0%8F%E8%BD%A6/%E7%BC%96%E7%A0%81%E5%99%A8%E6%A8%A1%E5%9E%8B.png" alt="编码器"></p>
+<h4 id="实现方法">实现方法</h4>
+<p>我通过使用定时器的更新中断来实现每20ms触发一次编码器ccr数据读取,通过换算得到电机的当前速度.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">void Read_Encoder(TIM_HandleTypeDef *htim)//TIM编码器测速函数</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">  int16_t count=__HAL_TIM_GET_COUNTER(htim);//直接读取寄存器的值</span><br><span class="line">  diff=count-last_count;//前后两次差值</span><br><span class="line">  if(diff&gt;32767)&#123;//逆时针转动，超越最低限额，比如10-&gt;65530，相减等于65520，那就减去65535，得到-15，表示逆时针转动了15</span><br><span class="line">    diff-=65535;</span><br><span class="line">  &#125;</span><br><span class="line">  else if(diff&lt;-32767)&#123;//同理可得，这是顺时针</span><br><span class="line">    diff+=65535;</span><br><span class="line">  &#125;</span><br><span class="line">  last_count=count;//更新上一次编码器值</span><br><span class="line">  speed=diff*60/14;</span><br><span class="line">  speed_IIR=DiffFilter_IIR(speed);</span><br><span class="line">  //....;pp</span><br><span class="line">  //return diff;//返回差值</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) &#123;//定时器中断回调函数,每20ms触发一次</span><br><span class="line">  if (htim==&amp;htim4) &#123;//判断是从tim4的中断来的</span><br><span class="line">    HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);</span><br><span class="line">    Read_Encoder(&amp;htim2);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-串级pid">3.串级pid</h3>
+<p>现在我们得到了小车的实时角度与电机速度值,我们可以实现直立环与速度环了</p>
+<h4 id="pid原理">pid原理</h4>
+<p>pid拆分出来就是比例,积分,微分:<br>
+比例:其实就是指当前数据与目标数据的差值,反映的是路程.<br>
+积分:就是高数里指的积分,表示数据的累积<br>
+微分:简单理解就是加速度,表示数据变化的斜率<br>
+$$u(t)=K_P e(t)+K_i\int_0^te(\tau)d\tau+K_d\frac{de(t)}{dt} $$<br>
+而串级pid的实现就是两个环的反馈数据</p>
+<div align="center">
+<pre class="mermaid">graph LR
+A(目标角度)
+B(当前角度)
+C(外环-直立环)
+D(内环-速度环)
+E(当前速度)
+F(输出pwm)
+G(作用对象)
+A-->C
+C-->D
+D-->F
+B-->C
+E-->D
+F-->G</pre>
+</div> 
+<p>实现代码如下:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">float balance_control_simple(float angle, float gyro, float speed) &#123;</span><br><span class="line">    // 1. 安全检查：倾斜过大停止</span><br><span class="line">    if (fabsf(angle) &gt; MAX_ANGLE) &#123;</span><br><span class="line">        speed_integral = 0;</span><br><span class="line">        return 0.0f;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 2. 直立环计算</span><br><span class="line">    // 角度误差 = 目标角度 - 当前角度</span><br><span class="line">    float angle_error = TARGET_ANGLE - angle;</span><br><span class="line"></span><br><span class="line">    // 直立环输出 = Kp*角度误差 + Kd*(-角速度)</span><br><span class="line">    float upright_output = ANGLE_KP * angle_error + ANGLE_KD * (-gyro);</span><br><span class="line"></span><br><span class="line">    // 3. 速度环计算</span><br><span class="line">    // 速度误差 = 直立环输出（视为目标速度） - 当前速度</span><br><span class="line">    float speed_error = upright_output - speed;</span><br><span class="line"></span><br><span class="line">    // 积分项（防饱和）</span><br><span class="line">    speed_integral += speed_error;</span><br><span class="line">    if (speed_integral &gt; 100.0f) speed_integral = 100.0f;</span><br><span class="line">    if (speed_integral &lt; -100.0f) speed_integral = -100.0f;</span><br><span class="line"></span><br><span class="line">    // 速度环输出</span><br><span class="line">    float speed_output = SPEED_KP * speed_error + SPEED_KI * speed_integral;</span><br><span class="line"></span><br><span class="line">    // 4. 总输出 = 速度环输出</span><br><span class="line">    float pwm_output = speed_output;</span><br><span class="line"></span><br><span class="line">    // 5. 限幅</span><br><span class="line">    if (pwm_output &gt; MAX_PWM) pwm_output = MAX_PWM;</span><br><span class="line">    if (pwm_output &lt; -MAX_PWM) pwm_output = -MAX_PWM;</span><br><span class="line"></span><br><span class="line">    // 6. 死区处理</span><br><span class="line">    if (fabsf(pwm_output) &lt; DEAD_ZONE) &#123;</span><br><span class="line">        pwm_output = 0.0f;</span><br><span class="line">        speed_integral *= 0.9f;  // 积分衰减</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return pwm_output;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="实现效果">实现效果</h2>
+<video width="100%" controls  src="/videos/小车测试.mp4" >
+</video>
+<h2 id="单片机的运用">单片机的运用</h2>
+<p>本项目涉及许多单片机外设,包括定时器,串口,I2C,GPIO等等<br>
+<img src="/images/%E5%B0%8F%E8%BD%A6/cubemx%E5%9B%BE.png" alt="cube"></p>
+<h3 id="定时器">定时器</h3>
+<ul>
+<li>TIM1输出pwm</li>
+<li>TIM2/TIM3编码器模型读取电机编码器输出</li>
+<li>TIM4更新中断实现20ms读取一次速度值</li>
+</ul>
+<h3 id="I2C">I2C</h3>
+<ul>
+<li>用于与mpu6050通讯</li>
+</ul>
+<h3 id="GPIO">GPIO</h3>
+<ul>
+<li>控制led灯亮灭指示状态</li>
+<li>读取电机驱动的数据获取转动方向</li>
+<li>读取按键值</li>
+</ul>
+<h3 id="串口">串口</h3>
+<ul>
+<li>输出整体数据用于调试</li>
+</ul>
+<h2 id="总结与反思">总结与反思</h2>
+<p>从结果来看,小车的平衡任务失败了,代码方向已经尽力优化,输出的数据也趋近稳定与完美,可是无论如何调整pid数据实际的控制效果还是不好,主要的原因是电机选型失误,力矩与响应速度不足以满足精确控制,且电机轴与轮子存在很大虚位.后期可以通过更换输出力矩与响应速度更快的电机改善,然后增加转向环与遥控器功能来实现真正的平衡小车功能.<br>
+<img src="/images/%E5%B0%8F%E8%BD%A6/n20.avif" alt="n20"></p>
+<h2 id="小组成员">小组成员</h2>
+<p>组别:13<br>
+组长:洪俊钦<br>
+组员:迪西克,聚迪批</p>
+
+    </div>
+
+    
+    
+    
+      
+
+        <div class="reward-container">
+  <div>Donate comment here.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/m.jpg" alt="Junqin Hong 微信支付">
+        <p>微信支付</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="https://space.bilibili.com/699838939?spm_id_from=333.1007.0.0">
+            <span class="icon">
+              <i class="fab fa-bilibili"></i>
+            </span>
+
+            <span class="label">Bilibili</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/10/26/Mechanics/" rel="prev" title="Mechanics">
+      <i class="fa fa-chevron-left"></i> Mechanics
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">平衡小车课程设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%AF%8D"><span class="nav-number">1.2.</span> <span class="nav-text">关键词</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6%E8%AE%BE%E8%AE%A1"><span class="nav-number">1.3.</span> <span class="nav-text">硬件设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E8%BF%90%E8%A1%8C"><span class="nav-number">1.4.</span> <span class="nav-text">程序运行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%9F%E8%83%BD%E5%87%BD%E6%95%B0%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.5.</span> <span class="nav-text">功能函数介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2"><span class="nav-number">1.5.1.</span> <span class="nav-text">1.卡尔曼滤波</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%94%B5%E6%9C%BA%E9%80%9F%E5%BA%A6%E8%8E%B7%E5%8F%96"><span class="nav-number">1.5.2.</span> <span class="nav-text">2.电机速度获取</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95"><span class="nav-number">1.5.2.1.</span> <span class="nav-text">实现方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E4%B8%B2%E7%BA%A7pid"><span class="nav-number">1.5.3.</span> <span class="nav-text">3.串级pid</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#pid%E5%8E%9F%E7%90%86"><span class="nav-number">1.5.3.1.</span> <span class="nav-text">pid原理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%95%88%E6%9E%9C"><span class="nav-number">1.6.</span> <span class="nav-text">实现效果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E7%89%87%E6%9C%BA%E7%9A%84%E8%BF%90%E7%94%A8"><span class="nav-number">1.7.</span> <span class="nav-text">单片机的运用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E6%97%B6%E5%99%A8"><span class="nav-number">1.7.1.</span> <span class="nav-text">定时器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#I2C"><span class="nav-number">1.7.2.</span> <span class="nav-text">I2C</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GPIO"><span class="nav-number">1.7.3.</span> <span class="nav-text">GPIO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%B2%E5%8F%A3"><span class="nav-number">1.7.4.</span> <span class="nav-text">串口</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E4%B8%8E%E5%8F%8D%E6%80%9D"><span class="nav-number">1.8.</span> <span class="nav-text">总结与反思</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%84%E6%88%90%E5%91%98"><span class="nav-number">1.9.</span> <span class="nav-text">小组成员</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Junqin Hong"
+      src="/images/hjq_logo.jpg">
+  <p class="site-author-name" itemprop="name">Junqin Hong</p>
+  <div class="site-description" itemprop="description">Mechanical Design，model aircraft</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+  </nav>
+</div>
+  <div class="sidebar-button motion-element"><i class="fa fa-comment"></i>
+    Chat
+  </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wogehebuge" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wogehebuge" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:1638658956@qq.com" title="E-Mail → mailto:1638658956@qq.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Junqin Hong</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'default',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : true,
+      appId      : 'uAMebVSVNdpxlDdonlkqW8vh-MdYXbMMI',
+      appKey     : 't0nTl8O1lwFlocMGZGMXC101',
+      placeholder: "请多留言，这对我真的很重要。",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : 'zh-cn' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : 'https://uamebvsv.api.lncldglobal.com'
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
